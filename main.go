@@ -11,7 +11,7 @@ func main() {
 	orign := model.Point{X: 0.0, Y: 0.0}
 	pickup := model.Point{X: 3.0, Y: 4.0}
 	dropoff := model.Point{X: 6.0, Y: 8.0}
-	l := model.NewLoad(pickup, dropoff)
+	l := model.NewLoad(1, pickup, dropoff)
 
 	fmt.Printf("l.Cost(origin)=%f\n", l.Cost(orign))
 
@@ -20,4 +20,5 @@ func main() {
 	for loadNumber, l := range loads {
 		fmt.Printf("Num:%d, load:%+v\n", loadNumber, l)
 	}
+
 }

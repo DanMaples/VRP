@@ -11,7 +11,7 @@ import (
 func TestNewLoad(t *testing.T) {
 	start := model.Point{X: 0.0, Y: 0.0}
 	stop := model.Point{X: 3.0, Y: 4.0}
-	l := model.NewLoad(start, stop)
+	l := model.NewLoad(1, start, stop)
 
 	if l.Pickup.X != start.X || l.Pickup.Y != start.Y {
 		t.Errorf("Pickup incorrect: Expected %+v, Actual %+v", start, l.Pickup)
@@ -22,10 +22,10 @@ func TestNewLoad(t *testing.T) {
 	}
 }
 
-func TestCost(t *testing.T) {
+func TestLoadCost(t *testing.T) {
 	start := model.Point{X: 3.0, Y: 4.0}
 	stop := model.Point{X: 6.0, Y: 8.0}
-	a := model.NewLoad(start, stop)
+	a := model.NewLoad(1, start, stop)
 
 	expectedCost := 10.0
 

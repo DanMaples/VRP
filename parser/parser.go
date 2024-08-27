@@ -34,7 +34,7 @@ func Parse(f string) map[int]model.Load {
 		if err != nil {
 			panic(err)
 		}
-		loads[loadNumber] = model.NewLoad(model.NewPoint(data[row][1]), model.NewPoint(data[row][2]))
+		loads[loadNumber] = model.NewLoad(loadNumber, model.NewPoint(data[row][1]), model.NewPoint(data[row][2]))
 	}
 	return loads
 }
