@@ -1,6 +1,7 @@
 package model
 
 import (
+	"math"
 	"strconv"
 	"strings"
 )
@@ -31,4 +32,8 @@ func NewPoint(s string) Point {
 		X: xComponent,
 		Y: yComponent,
 	}
+}
+
+func (p *Point) Distance(d Point) float64 {
+	return math.Sqrt(math.Pow(d.X-p.X, 2) + math.Pow(d.Y-p.Y, 2))
 }

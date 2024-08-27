@@ -8,11 +8,12 @@ import (
 )
 
 func main() {
-	start := model.Point{X: 2.0, Y: 2.0}
-	stop := model.Point{X: 5.0, Y: 6.0}
-	l := model.NewLoad(start, stop)
+	orign := model.Point{X: 0.0, Y: 0.0}
+	pickup := model.Point{X: 3.0, Y: 4.0}
+	dropoff := model.Point{X: 6.0, Y: 8.0}
+	l := model.NewLoad(pickup, dropoff)
 
-	fmt.Printf("l.Cost()=%f\n", l.Cost())
+	fmt.Printf("l.Cost(origin)=%f\n", l.Cost(orign))
 
 	loads := parser.Parse("problem1.txt")
 

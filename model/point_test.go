@@ -15,3 +15,15 @@ func TestNewPoint(t *testing.T) {
 		t.Errorf("Expected (%.20f,%.20f), Actual (%.20f,%.20f)", expected.X, expected.Y, actual.X, actual.Y)
 	}
 }
+
+func TestDistance(t *testing.T) {
+	a := model.Point{X: 0.0, Y: 0.0}
+	b := model.Point{X: 3.0, Y: 4.0}
+
+	expectedDistance := 5.0
+	actualDistance := a.Distance(b)
+
+	if expectedDistance != actualDistance {
+		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)
+	}
+}

@@ -28,7 +28,7 @@ func Parse(f string) map[int]model.Load {
 		panic(err)
 	}
 
-	loads := make(map[int]model.Load)
+	loads := make(map[int]model.Load, len(data)-1)
 	for row := 1; row < len(data); row++ {
 		loadNumber, err := strconv.Atoi(data[row][0])
 		if err != nil {
