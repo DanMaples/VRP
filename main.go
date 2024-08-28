@@ -17,6 +17,20 @@ func main() {
 	filePath := os.Args[1]
 
 	loads := parser.Parse(filePath)
+
+	routes := nextClosestAlgorithm(loads)
+
+	for _, route := range routes {
+		fmt.Println(route.LoadList())
+	}
+}
+
+// nextClosestAlgorithm sends out 1 driver to the closet pickup location and assigns that load to them.
+// The algorithm then finds the next closest pickup location to from the dropoff point and checks to
+// see if the driver is capable of handling that load. If so, it is assigned to that driver.
+// If the driver can't take that load, the driver is sent home and a new driver is dispatched,
+// starting the process over.
+func nextClosestAlgorithm(loads map[int]model.Load) []model.Route {
 	routes := []model.Route{model.NewRoute()}
 	currentDriverNumber := 0
 
@@ -31,24 +45,17 @@ func main() {
 			routes = append(routes, model.NewRoute())
 			currentDriverNumber++
 			currentLocation = model.Point{X: 0.0, Y: 0.0}
-			continue
+		} else {
+			routes[currentDriverNumber].AppendLoad(loads[closestLoadNumber])
+			currentLocation = loads[closestLoadNumber].Dropoff
+			delete(loads, closestLoadNumber)
 		}
-		routes[currentDriverNumber].AppendLoad(loads[closestLoadNumber])
-		currentLocation = loads[closestLoadNumber].Dropoff
-		delete(loads, closestLoadNumber)
 	}
-
-	totalDistance := 0.0
-	totalDrivers := 0
-	for _, route := range routes {
-		fmt.Println(route.LoadList())
-		//fmt.Println(route.LoadList(), "Distance ", route.Distance())
-		totalDistance += route.Distance()
-		totalDrivers += 1
-	}
-
-	//fmt.Println("Total Drivers ", totalDrivers)
-	//totalCost := float64(costPerDriver*totalDrivers) + totalDistance
-	//fmt.Println("Total Cost: ", totalCost)
-
+	return routes
 }
+
+// func dualDriverAlgorithm(loads map[int]model.Load) []model.Route {
+// 	routes := []model.Route{model.NewRoute()}
+
+// 	return routes
+// }
