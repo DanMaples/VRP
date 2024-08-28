@@ -6,8 +6,6 @@ import (
 	"github.com/DanMaples/VRP/model"
 )
 
-// @Todo: do a proper float comparison, may not be needed if cost is not float
-// @Todo: convert to table driven test
 func TestNewLoad(t *testing.T) {
 	pickup := model.Point{X: 1.0, Y: 2.0}
 	dropoff := model.Point{X: 3.0, Y: 4.0}
@@ -28,13 +26,13 @@ func TestNewLoad(t *testing.T) {
 }
 
 func TestDistanceToComplete(t *testing.T) {
-	start := model.Point{X: 3.0, Y: 4.0}
-	stop := model.Point{X: 6.0, Y: 8.0}
-	a := model.NewLoad(1, start, stop)
+	pickup := model.Point{X: 3.0, Y: 4.0}
+	dropoff := model.Point{X: 6.0, Y: 8.0}
+	a := model.NewLoad(1, pickup, dropoff)
 
 	expectedDistance := 10.0
 
-	actualDistance := a.DistanceToComplete(model.NewPoint("0.0,0.0"))
+	actualDistance := a.DistanceToComplete(model.Point{X: 0.0, Y: 0.0})
 
 	if expectedDistance != actualDistance {
 		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)

@@ -35,6 +35,7 @@ func NewPoint(s string) Point {
 	}
 }
 
+// Distance returns the distance from this point to the supplied point.
 func (p *Point) Distance(d Point) float64 {
 	return math.Sqrt(math.Pow(d.X-p.X, 2) + math.Pow(d.Y-p.Y, 2))
 }

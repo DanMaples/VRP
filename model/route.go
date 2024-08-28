@@ -29,6 +29,8 @@ func (r *Route) AppendLoad(load Load) {
 	r.loads = append(r.loads, load)
 }
 
+// LoadList returns a properly formatted string of the load numbers
+// in the form of "[x,y,z]"
 func (r *Route) LoadList() string {
 	var loadList strings.Builder
 	loadList.WriteString("[")
@@ -42,18 +44,10 @@ func (r *Route) LoadList() string {
 	return loadList.String()
 }
 
-// Distance returns the total distance from the origin,
-// through all stops, and back to the origin.
-func (r *Route) Distance() float64 {
-	if len(r.loads) == 0 {
-		return 0
-	}
-
-	origin := Point{X: 0.0, Y: 0.0}
-	lastLoad := r.loads[len(r.loads)-1]
-	return r.distance + origin.Distance(lastLoad.Dropoff)
-}
-
+// DistanceWithLoad will return the total distance of the route
+// if the supplied load were to be added to the end of it.
+// It includes driving from the origin, doing all the loads in the route,
+// then the additional load, then driving back to the origin.
 func (r *Route) DistanceWithLoad(load Load) float64 {
 	origin := Point{X: 0.0, Y: 0.0}
 

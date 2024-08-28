@@ -8,7 +8,8 @@ import (
 	"github.com/DanMaples/VRP/model"
 )
 
-// TODO: return errs instead of panicking
+// Parse will parse an input file and return a map of loads
+// where the key is the loadNumber of the load.
 func Parse(f string) map[int]model.Load {
 	file, err := os.Open(f)
 	if err != nil {
@@ -28,6 +29,8 @@ func Parse(f string) map[int]model.Load {
 	return parseData(data)
 }
 
+// ParseData will parse the raw data read from the file into a map
+// of loads where the key is the loadNumber of the load.
 func parseData(data [][]string) map[int]model.Load {
 	loads := make(map[int]model.Load, len(data)-1)
 	for row := 1; row < len(data); row++ {
