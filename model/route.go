@@ -6,14 +6,14 @@ import (
 )
 
 type Route struct {
-	loads []Load
-	cost  float64
+	loads    []Load
+	distance float64
 }
 
 func NewRoute() Route {
 	return Route{
-		loads: []Load{},
-		cost:  0,
+		loads:    []Load{},
+		distance: 0,
 	}
 }
 
@@ -21,10 +21,10 @@ func NewRoute() Route {
 func (r *Route) AppendLoad(load Load) {
 	if len(r.loads) == 0 {
 		origin := Point{X: 0.0, Y: 0.0}
-		r.cost = load.DistanceToComplete(origin)
+		r.distance = load.DistanceToComplete(origin)
 	} else {
 		lastLoad := r.loads[len(r.loads)-1]
-		r.cost += load.DistanceToComplete(lastLoad.Dropoff)
+		r.distance += load.DistanceToComplete(lastLoad.Dropoff)
 	}
 	r.loads = append(r.loads, load)
 }
@@ -51,5 +51,16 @@ func (r *Route) Distance() float64 {
 
 	origin := Point{X: 0.0, Y: 0.0}
 	lastLoad := r.loads[len(r.loads)-1]
-	return r.cost + origin.Distance(lastLoad.Dropoff)
+	return r.distance + origin.Distance(lastLoad.Dropoff)
+}
+
+func (r *Route) DistanceWithLoad(load Load) float64 {
+	origin := Point{X: 0.0, Y: 0.0}
+
+	if len(r.loads) == 0 {
+		return load.DistanceToComplete(origin) + load.Dropoff.Distance(origin)
+	}
+
+	lastLoad := r.loads[len(r.loads)-1]
+	return r.distance + load.DistanceToComplete(lastLoad.Dropoff) + origin.Distance(load.Dropoff)
 }

@@ -7,9 +7,14 @@ import (
 	"github.com/DanMaples/VRP/parser"
 )
 
+const (
+	maxDriverDistance = 720.0
+)
+
 func main() {
-	loads := parser.Parse("problem1.txt")
-	route := model.NewRoute()
+	loads := parser.Parse("problem20.txt")
+	routes := []model.Route{model.NewRoute()}
+	currentDriverNumber := 0
 
 	currentLocation := model.Point{X: 0.0, Y: 0.0}
 
@@ -18,11 +23,27 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		route.AppendLoad(loads[closestLoadNumber])
+		if routes[currentDriverNumber].DistanceWithLoad(loads[closestLoadNumber]) > maxDriverDistance {
+			routes = append(routes, model.NewRoute())
+			currentDriverNumber++
+			currentLocation = model.Point{X: 0.0, Y: 0.0}
+			continue
+		}
+		routes[currentDriverNumber].AppendLoad(loads[closestLoadNumber])
 		currentLocation = loads[closestLoadNumber].Dropoff
 		delete(loads, closestLoadNumber)
 	}
 
-	fmt.Println(route.LoadList())
-	fmt.Printf("\nDistance:%f\n", route.Distance())
+	totalDistance := 0.0
+	totalDrivers := 0
+	for _, route := range routes {
+		fmt.Println(route.LoadList(), "Distance ", route.Distance())
+		totalDistance += route.Distance()
+		totalDrivers += 1
+	}
+
+	fmt.Println("Total Drivers ", totalDrivers)
+	totalCost := float64(500*totalDrivers) + totalDistance
+	fmt.Println("Total Cost: ", totalCost)
+
 }
