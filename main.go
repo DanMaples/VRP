@@ -2,17 +2,21 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/DanMaples/VRP/model"
 	"github.com/DanMaples/VRP/parser"
 )
 
 const (
+	costPerDriver     = 500
 	maxDriverDistance = 720.0
 )
 
 func main() {
-	loads := parser.Parse("problem20.txt")
+	filePath := os.Args[1]
+
+	loads := parser.Parse(filePath)
 	routes := []model.Route{model.NewRoute()}
 	currentDriverNumber := 0
 
@@ -37,13 +41,14 @@ func main() {
 	totalDistance := 0.0
 	totalDrivers := 0
 	for _, route := range routes {
-		fmt.Println(route.LoadList(), "Distance ", route.Distance())
+		fmt.Println(route.LoadList())
+		//fmt.Println(route.LoadList(), "Distance ", route.Distance())
 		totalDistance += route.Distance()
 		totalDrivers += 1
 	}
 
-	fmt.Println("Total Drivers ", totalDrivers)
-	totalCost := float64(500*totalDrivers) + totalDistance
-	fmt.Println("Total Cost: ", totalCost)
+	//fmt.Println("Total Drivers ", totalDrivers)
+	//totalCost := float64(costPerDriver*totalDrivers) + totalDistance
+	//fmt.Println("Total Cost: ", totalCost)
 
 }
