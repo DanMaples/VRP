@@ -27,3 +27,55 @@ func TestDistance(t *testing.T) {
 		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)
 	}
 }
+
+func TestFindClosestLoad(t *testing.T) {
+	currentPoint := model.Point{X: 9.1, Y: 10.1}
+	var loads map[int]model.Load
+
+	// check for nil map
+	_, err := currentPoint.FindClosestLoad(loads)
+	if err == nil {
+		t.Errorf("expected error, but none found")
+	}
+
+	// check for empty map
+	loads = map[int]model.Load{}
+	_, err = currentPoint.FindClosestLoad(loads)
+	if err == nil {
+		t.Errorf("expected error, but none found")
+	}
+
+	loads = map[int]model.Load{
+		1: {
+			Number:  1,
+			Pickup:  model.Point{X: 3.0, Y: 4.0},
+			Dropoff: model.Point{X: 5.0, Y: 6.0},
+		},
+		2: {
+			Number:  2,
+			Pickup:  model.Point{X: 7.0, Y: 8.0},
+			Dropoff: model.Point{X: 9.0, Y: 10.0},
+		},
+		3: {
+			Number:  3,
+			Pickup:  model.Point{X: 9.0, Y: 10.0},
+			Dropoff: model.Point{X: 9.0, Y: 10.0},
+		},
+		4: {
+			Number:  4,
+			Pickup:  model.Point{X: 11.0, Y: 12.0},
+			Dropoff: model.Point{X: 9.0, Y: 10.0},
+		},
+	}
+
+	expected := 3
+	actual, err := currentPoint.FindClosestLoad(loads)
+
+	if err != nil {
+		t.Errorf("unexpected error returned")
+	}
+
+	if expected != actual {
+		t.Errorf("Expected %d Actual %d", expected, actual)
+	}
+}

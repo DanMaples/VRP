@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -36,4 +37,23 @@ func NewPoint(s string) Point {
 
 func (p *Point) Distance(d Point) float64 {
 	return math.Sqrt(math.Pow(d.X-p.X, 2) + math.Pow(d.Y-p.Y, 2))
+}
+
+// FindClosetLoad will find the load with the closet pickup point to the current point.
+func (p *Point) FindClosestLoad(loads map[int]Load) (int, error) {
+	if len(loads) == 0 {
+		return 0, fmt.Errorf("input has no loads")
+	}
+
+	closestLoadNumber := 0
+	closestDistance := 0.0
+	for _, load := range loads {
+		distanceToLoad := p.Distance(load.Pickup)
+		if distanceToLoad < closestDistance || closestLoadNumber == 0 {
+			closestDistance = distanceToLoad
+			closestLoadNumber = load.Number
+		}
+	}
+
+	return closestLoadNumber, nil
 }

@@ -7,22 +7,22 @@ import (
 )
 
 func TestRouteCost(t *testing.T) {
-	start := model.Point{X: 3.0, Y: 4.0}
-	stop := model.Point{X: 9.0, Y: 12.0}
-	a := model.NewLoad(1, start, stop)
+	pickup := model.Point{X: 3.0, Y: 4.0}
+	dropoff := model.Point{X: 9.0, Y: 12.0}
+	a := model.NewLoad(1, pickup, dropoff)
 
-	start = model.Point{X: 9.0, Y: -12.0}
-	stop = model.Point{X: 3.0, Y: -4.0}
-	b := model.NewLoad(2, start, stop)
+	pickup = model.Point{X: 9.0, Y: -12.0}
+	dropoff = model.Point{X: 3.0, Y: -4.0}
+	b := model.NewLoad(2, pickup, dropoff)
 
 	route := model.NewRoute()
 	route.AppendLoad(a)
 	route.AppendLoad(b)
 
-	actualCost := route.Distance()
-	expectedCost := 54.0
+	actualDistance := route.Distance()
+	expectedDistance := 54.0
 
-	if expectedCost != actualCost {
-		t.Errorf("Expected %.20f, Actual %.20f", expectedCost, actualCost)
+	if expectedDistance != actualDistance {
+		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)
 	}
 }

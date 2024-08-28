@@ -11,18 +11,18 @@ func main() {
 	loads := parser.Parse("problem1.txt")
 	route := model.NewRoute()
 
-	for _, l := range loads {
-		fmt.Printf("load:%+v\n", l)
-	}
+	currentLocation := model.Point{X: 0.0, Y: 0.0}
 
-	for i := 10; i > 0; i-- {
-		load, exists := loads[i]
-		if !exists {
-			panic("not in map")
+	for len(loads) > 0 {
+		closestLoadNumber, err := currentLocation.FindClosestLoad(loads)
+		if err != nil {
+			panic(err)
 		}
-		route.AppendLoad(load)
+		route.AppendLoad(loads[closestLoadNumber])
+		currentLocation = loads[closestLoadNumber].Dropoff
+		delete(loads, closestLoadNumber)
 	}
 
-	fmt.Println(route.Loads())
-	fmt.Printf("\ncost:%f\n", route.Distance())
+	fmt.Println(route.LoadList())
+	fmt.Printf("\nDistance:%f\n", route.Distance())
 }

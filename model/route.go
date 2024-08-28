@@ -1,5 +1,10 @@
 package model
 
+import (
+	"strconv"
+	"strings"
+)
+
 type Route struct {
 	loads []Load
 	cost  float64
@@ -24,8 +29,17 @@ func (r *Route) AppendLoad(load Load) {
 	r.loads = append(r.loads, load)
 }
 
-func (r *Route) Loads() []Load {
-	return r.loads
+func (r *Route) LoadList() string {
+	var loadList strings.Builder
+	loadList.WriteString("[")
+	seperator := ""
+	for _, load := range r.loads {
+		loadList.WriteString(seperator + strconv.Itoa(load.Number))
+		seperator = ","
+	}
+	loadList.WriteString("]")
+
+	return loadList.String()
 }
 
 // Distance returns the total distance from the origin,
