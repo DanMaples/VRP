@@ -19,7 +19,7 @@ func TestRouteCost(t *testing.T) {
 	route.AppendLoad(a)
 	route.AppendLoad(b)
 
-	actualCost := route.Cost()
+	actualCost := route.Distance()
 	expectedCost := 54.0
 
 	if expectedCost != actualCost {

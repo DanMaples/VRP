@@ -9,9 +9,6 @@ import (
 )
 
 // TODO: return errs instead of panicking
-// TODO: unit test, probably using afero,
-//
-//	or break out file read.
 func Parse(f string) map[int]model.Load {
 	file, err := os.Open(f)
 	if err != nil {
@@ -28,13 +25,19 @@ func Parse(f string) map[int]model.Load {
 		panic(err)
 	}
 
+	return parseData(data)
+}
+
+func parseData(data [][]string) map[int]model.Load {
 	loads := make(map[int]model.Load, len(data)-1)
 	for row := 1; row < len(data); row++ {
 		loadNumber, err := strconv.Atoi(data[row][0])
 		if err != nil {
 			panic(err)
 		}
-		loads[loadNumber] = model.NewLoad(loadNumber, model.NewPoint(data[row][1]), model.NewPoint(data[row][2]))
+		pickup := model.NewPoint(data[row][1])
+		dropoff := model.NewPoint(data[row][2])
+		loads[loadNumber] = model.NewLoad(loadNumber, pickup, dropoff)
 	}
 	return loads
 }

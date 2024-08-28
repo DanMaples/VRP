@@ -9,29 +9,34 @@ import (
 // @Todo: do a proper float comparison, may not be needed if cost is not float
 // @Todo: convert to table driven test
 func TestNewLoad(t *testing.T) {
-	start := model.Point{X: 0.0, Y: 0.0}
-	stop := model.Point{X: 3.0, Y: 4.0}
-	l := model.NewLoad(1, start, stop)
-
-	if l.Pickup.X != start.X || l.Pickup.Y != start.Y {
-		t.Errorf("Pickup incorrect: Expected %+v, Actual %+v", start, l.Pickup)
+	pickup := model.Point{X: 1.0, Y: 2.0}
+	dropoff := model.Point{X: 3.0, Y: 4.0}
+	actual := model.NewLoad(1, pickup, dropoff)
+	expected := model.Load{
+		Number:  1,
+		Pickup:  model.Point{X: 1.0, Y: 2.0},
+		Dropoff: model.Point{X: 3.0, Y: 4.0},
 	}
 
-	if l.Dropoff.X != stop.X || l.Dropoff.Y != stop.Y {
-		t.Errorf("Dropoff incorrect: Expected %+v, Actual %+v", start, l.Pickup)
+	if expected.Number != actual.Number ||
+		expected.Pickup.X != actual.Pickup.X ||
+		expected.Pickup.Y != actual.Pickup.Y ||
+		expected.Dropoff.X != actual.Dropoff.X ||
+		expected.Dropoff.Y != actual.Dropoff.Y {
+		t.Errorf("Expected %+v, Actual %+v", expected, actual)
 	}
 }
 
-func TestLoadCost(t *testing.T) {
+func TestDistanceToComplete(t *testing.T) {
 	start := model.Point{X: 3.0, Y: 4.0}
 	stop := model.Point{X: 6.0, Y: 8.0}
 	a := model.NewLoad(1, start, stop)
 
-	expectedCost := 10.0
+	expectedDistance := 10.0
 
-	actualCost := a.Cost(model.NewPoint("0.0,0.0"))
+	actualDistance := a.DistanceToComplete(model.NewPoint("0.0,0.0"))
 
-	if expectedCost != actualCost {
-		t.Errorf("Expected %.20f, Actual %.20f", expectedCost, actualCost)
+	if expectedDistance != actualDistance {
+		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)
 	}
 }

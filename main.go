@@ -8,17 +8,21 @@ import (
 )
 
 func main() {
-	orign := model.Point{X: 0.0, Y: 0.0}
-	pickup := model.Point{X: 3.0, Y: 4.0}
-	dropoff := model.Point{X: 6.0, Y: 8.0}
-	l := model.NewLoad(1, pickup, dropoff)
-
-	fmt.Printf("l.Cost(origin)=%f\n", l.Cost(orign))
-
 	loads := parser.Parse("problem1.txt")
+	route := model.NewRoute()
 
-	for loadNumber, l := range loads {
-		fmt.Printf("Num:%d, load:%+v\n", loadNumber, l)
+	for _, l := range loads {
+		fmt.Printf("load:%+v\n", l)
 	}
 
+	for i := 10; i > 0; i-- {
+		load, exists := loads[i]
+		if !exists {
+			panic("not in map")
+		}
+		route.AppendLoad(load)
+	}
+
+	fmt.Println(route.Loads())
+	fmt.Printf("\ncost:%f\n", route.Distance())
 }
