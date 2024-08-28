@@ -27,8 +27,8 @@ func main() {
 // nextClosestAlgorithm sends out 1 driver to the closet pickup location and assigns that load to them.
 // The algorithm then finds the next closest pickup location from the dropoff point and checks to
 // see if the driver is capable of handling that load. If so, it is assigned to that driver.
-// If the driver can't take that load, the driver is sent home and a new driver is dispatched,
-// starting the process over.
+// This repeats until a driver can't take the next closest load. At that point, the driver is sent back
+// to the depot and a new driver is dispatched.
 func nextClosestAlgorithm(loads map[int]model.Load) []model.Route {
 	routes := []model.Route{model.NewRoute()}
 	currentDriverNumber := 0
