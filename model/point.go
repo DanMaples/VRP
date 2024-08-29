@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"math"
 	"sort"
 	"strconv"
@@ -41,51 +40,30 @@ func (p *Point) Distance(d Point) float64 {
 	return math.Sqrt(math.Pow(d.X-p.X, 2) + math.Pow(d.Y-p.Y, 2))
 }
 
-// FindClosetLoad will find the load with the closet pickup point to the current point.
-func (p *Point) FindClosestLoad(loads map[int]Load) (int, error) {
-	if len(loads) == 0 {
-		return 0, fmt.Errorf("input has no loads")
-	}
-
-	closestLoadNumber := 0
-	closestDistance := 0.0
-	for _, load := range loads {
-		distanceToLoad := p.Distance(load.Pickup)
-		if distanceToLoad < closestDistance || closestLoadNumber == 0 {
-			closestDistance = distanceToLoad
-			closestLoadNumber = load.Number
-		}
-	}
-
-	return closestLoadNumber, nil
-}
-
-// FindClosetLoad will return an ordered slice of the closest loads.
-func (p *Point) FindClosestLoads(loads map[int]Load) ([]int, error) {
-	if len(loads) == 0 {
-		return []int{}, fmt.Errorf("input has no loads")
-	}
+// FindClosestLoad will return an ordered slice of the closest loads.
+func (p *Point) FindClosestLoads(loads map[int]Load) []int {
+	numberLoads := len(loads)
 
 	type loadDistance struct {
 		loadNumber int
 		distance   float64
 	}
 
-	distances := make([]loadDistance, len(loads))
+	loadDistances := make([]loadDistance, numberLoads)
 	index := 0
 	for _, load := range loads {
-		distances[index] = loadDistance{loadNumber: load.Number, distance: p.Distance(load.Pickup)}
+		loadDistances[index] = loadDistance{loadNumber: load.Number, distance: p.Distance(load.Pickup)}
 		index++
 	}
 
-	sort.Slice(distances, func(i, j int) bool {
-		return distances[i].distance < distances[j].distance
+	sort.Slice(loadDistances, func(i, j int) bool {
+		return loadDistances[i].distance < loadDistances[j].distance
 	})
 
-	orderedLoads := make([]int, len(loads))
-	for index, ld := range distances {
-		orderedLoads[index] = ld.loadNumber
+	orderedLoads := make([]int, numberLoads)
+	for index, loadDistance := range loadDistances {
+		orderedLoads[index] = loadDistance.loadNumber
 	}
 
-	return orderedLoads, nil
+	return orderedLoads
 }
