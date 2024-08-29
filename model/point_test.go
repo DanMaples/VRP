@@ -18,14 +18,34 @@ func TestNewPoint(t *testing.T) {
 }
 
 func TestDistance(t *testing.T) {
-	a := model.Point{X: 0.0, Y: 0.0}
-	b := model.Point{X: 3.0, Y: 4.0}
-
-	expectedDistance := 5.0
-	actualDistance := a.Distance(b)
-
-	if expectedDistance != actualDistance {
-		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)
+	tests := map[string]struct {
+		pointA           model.Point
+		pointB           model.Point
+		expectedDistance float64
+	}{
+		"basic": {
+			pointA:           model.Point{X: 0.0, Y: 0.0},
+			pointB:           model.Point{X: 3.0, Y: 4.0},
+			expectedDistance: 5.0,
+		},
+		"offset": {
+			pointA:           model.Point{X: 1.0, Y: 1.0},
+			pointB:           model.Point{X: 4.0, Y: 5.0},
+			expectedDistance: 5.0,
+		},
+		"negativeQuadrant": {
+			pointA:           model.Point{X: -1.0, Y: -1.0},
+			pointB:           model.Point{X: -4.0, Y: -5.0},
+			expectedDistance: 5.0,
+		},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			actualDistance := tc.pointA.Distance(tc.pointB)
+			if tc.expectedDistance != actualDistance {
+				t.Fatalf("Expected %.20f, Actual %.20f", tc.expectedDistance, actualDistance)
+			}
+		})
 	}
 }
 

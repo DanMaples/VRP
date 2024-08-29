@@ -35,23 +35,43 @@ func TestRouteDistanceWithLoad(t *testing.T) {
 }
 
 func TestLoadList(t *testing.T) {
-	pickup := model.Point{X: -3.0, Y: 4.0}
-	dropoff := model.Point{X: -6.0, Y: 0.0}
-	a := model.NewLoad(1, pickup, dropoff)
-
-	pickup = model.Point{X: -6.0, Y: 4.0}
-	dropoff = model.Point{X: -9.0, Y: 0.0}
-	b := model.NewLoad(2, pickup, dropoff)
-
-	route := model.NewRoute()
-	route.AppendLoad(a)
-	route.AppendLoad(b)
-
-	expected := "[1,2]"
-	actual := route.LoadList()
-
-	if strings.Compare(expected, actual) != 0 {
-		t.Errorf("Expected %s, Actual %s", expected, actual)
+	tests := map[string]struct {
+		loads        []model.Load
+		expectedList string
+	}{
+		"oneLoad": {
+			loads: []model.Load{
+				model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
+			},
+			expectedList: "[1]",
+		},
+		"twoLoads": {
+			loads: []model.Load{
+				model.NewLoad(2, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
+				model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
+			},
+			expectedList: "[2,1]",
+		},
+		"threeLoads": {
+			loads: []model.Load{
+				model.NewLoad(2, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
+				model.NewLoad(3, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
+				model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
+			},
+			expectedList: "[2,3,1]",
+		},
 	}
 
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			route := model.NewRoute()
+			for _, load := range tc.loads {
+				route.AppendLoad(load)
+			}
+			actual := route.LoadList()
+			if strings.Compare(tc.expectedList, actual) != 0 {
+				t.Fatalf("Expected %s, Actual %s", tc.expectedList, actual)
+			}
+		})
+	}
 }
