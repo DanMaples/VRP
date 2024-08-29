@@ -34,7 +34,6 @@ func main() {
 // to the depot and a new driver is dispatched.
 func enhancedNextClosestAlgorithm(loads map[int]model.Load) []model.Route {
 	routes := []model.Route{model.NewRoute()}
-	currentDriverNumber := 0
 
 	currentLocation := model.Point{X: 0.0, Y: 0.0}
 
@@ -43,17 +42,16 @@ func enhancedNextClosestAlgorithm(loads map[int]model.Load) []model.Route {
 
 		closestViableLoadNumber := 0
 		for _, loadNum := range closestLoadNumbers {
-			if routes[currentDriverNumber].DistanceWithLoad(loads[loadNum]) <= maxDriverDistance {
+			if routes[len(routes)-1].DistanceWithLoad(loads[loadNum]) <= maxDriverDistance {
 				closestViableLoadNumber = loadNum
 				break
 			}
 		}
 		if closestViableLoadNumber == 0 {
 			routes = append(routes, model.NewRoute())
-			currentDriverNumber++
 			currentLocation = model.Point{X: 0.0, Y: 0.0}
 		} else {
-			routes[currentDriverNumber].AppendLoad(loads[closestViableLoadNumber])
+			routes[len(routes)-1].AppendLoad(loads[closestViableLoadNumber])
 			currentLocation = loads[closestViableLoadNumber].Dropoff
 			delete(loads, closestViableLoadNumber)
 		}
