@@ -6,14 +6,6 @@ type Load struct {
 	Dropoff Point
 }
 
-func NewLoad(number int, pickup Point, dropoff Point) Load {
-	return Load{
-		Number:  number,
-		Pickup:  pickup,
-		Dropoff: dropoff,
-	}
-}
-
 // DistanceToComplete represents the distance required
 // to complete the load from the given point.
 func (l *Load) DistanceToComplete(p Point) float64 {

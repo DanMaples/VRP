@@ -40,7 +40,7 @@ func parseData(data [][]string) map[int]model.Load {
 		}
 		pickup := model.NewPoint(data[row][1])
 		dropoff := model.NewPoint(data[row][2])
-		loads[loadNumber] = model.NewLoad(loadNumber, pickup, dropoff)
+		loads[loadNumber] = model.Load{Number: loadNumber, Pickup: pickup, Dropoff: dropoff}
 	}
 	return loads
 }

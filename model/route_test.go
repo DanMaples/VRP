@@ -8,13 +8,8 @@ import (
 )
 
 func TestRouteDistanceWithLoad(t *testing.T) {
-	pickup := model.Point{X: -3.0, Y: 4.0}
-	dropoff := model.Point{X: -6.0, Y: 0.0}
-	loadA := model.NewLoad(1, pickup, dropoff)
-
-	pickup = model.Point{X: -6.0, Y: 4.0}
-	dropoff = model.Point{X: -9.0, Y: 0.0}
-	loadB := model.NewLoad(2, pickup, dropoff)
+	loadA := model.Load{Number: 1, Pickup: model.Point{X: -3.0, Y: 4.0}, Dropoff: model.Point{X: -6.0, Y: 0.0}}
+	loadB := model.Load{Number: 2, Pickup: model.Point{X: -6.0, Y: 4.0}, Dropoff: model.Point{X: -9.0, Y: 0.0}}
 
 	tests := map[string]struct {
 		routeLoads       []model.Load
@@ -48,9 +43,9 @@ func TestRouteDistanceWithLoad(t *testing.T) {
 }
 
 func TestLoadList(t *testing.T) {
-	loadOne := model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0})
-	loadTwo := model.NewLoad(2, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0})
-	loadThree := model.NewLoad(3, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0})
+	loadOne := model.Load{Number: 1, Pickup: model.Point{X: -3.0, Y: 4.0}, Dropoff: model.Point{X: -6.0, Y: 0.0}}
+	loadTwo := model.Load{Number: 2, Pickup: model.Point{X: -3.0, Y: 4.0}, Dropoff: model.Point{X: -6.0, Y: 0.0}}
+	loadThree := model.Load{Number: 3, Pickup: model.Point{X: -3.0, Y: 4.0}, Dropoff: model.Point{X: -6.0, Y: 0.0}}
 
 	tests := map[string]struct {
 		loads        []model.Load

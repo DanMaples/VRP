@@ -65,35 +65,40 @@ func TestDistance(t *testing.T) {
 }
 
 func TestFindClosestLoads(t *testing.T) {
-	currentPoint := model.Point{X: 2.0, Y: 3.0}
-
+	loadOne := model.Load{Number: 1, Pickup: model.Point{X: 5.0, Y: -4.0}, Dropoff: model.Point{X: 8.0, Y: -4.0}}
+	loadTwo := model.Load{Number: 2, Pickup: model.Point{X: 5.0, Y: 4.0}, Dropoff: model.Point{X: 7.0, Y: 4.0}}
+	loadThree := model.Load{Number: 3, Pickup: model.Point{X: -2.0, Y: -8.0}, Dropoff: model.Point{X: -6.0, Y: -8.0}}
+	loadFour := model.Load{Number: 4, Pickup: model.Point{X: 5.0, Y: -2.0}, Dropoff: model.Point{X: 8.0, Y: -2.0}}
 	loads := map[int]model.Load{
-		2: {
-			Number:  2,
-			Pickup:  model.Point{X: 5.0, Y: 4.0},
-			Dropoff: model.Point{X: 7.0, Y: 4.0},
-		},
-		4: {
-			Number:  4,
-			Pickup:  model.Point{X: 5.0, Y: -2.0},
-			Dropoff: model.Point{X: 8.0, Y: -2.0},
-		},
-		1: {
-			Number:  1,
-			Pickup:  model.Point{X: 5.0, Y: -4.0},
-			Dropoff: model.Point{X: 8.0, Y: -4.0},
-		},
-		3: {
-			Number:  3,
-			Pickup:  model.Point{X: -2.0, Y: -8.0},
-			Dropoff: model.Point{X: -6.0, Y: -8.0},
-		},
+		1: loadOne,
+		2: loadTwo,
+		3: loadThree,
+		4: loadFour,
 	}
 
-	expected := []int{2, 4, 1, 3}
-	actual := currentPoint.FindClosestLoads(loads)
-
-	if reflect.DeepEqual(expected, actual) != true {
-		t.Errorf("Expected %d Actual %d", expected, actual)
+	tests := map[string]struct {
+		currentPoint  model.Point
+		expectedOrder []int
+	}{
+		"2,3": {
+			currentPoint:  model.Point{X: 2.0, Y: 3.0},
+			expectedOrder: []int{2, 4, 1, 3},
+		},
+		"-5,-10": {
+			currentPoint:  model.Point{X: -5.0, Y: -10.0},
+			expectedOrder: []int{3, 1, 4, 2},
+		},
+		"4,-2": {
+			currentPoint:  model.Point{X: 4.0, Y: -2.0},
+			expectedOrder: []int{4, 1, 2, 3},
+		},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			actualOrder := tc.currentPoint.FindClosestLoads(loads)
+			if reflect.DeepEqual(tc.expectedOrder, actualOrder) != true {
+				t.Errorf("Expected %v Actual %v", tc.expectedOrder, actualOrder)
+			}
+		})
 	}
 }
