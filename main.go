@@ -17,7 +17,7 @@ func main() {
 
 	loads := parser.Parse(filePath)
 
-	routes := nextClosestAlgorithm(loads)
+	routes := enhancedNextClosestAlgorithm(loads)
 
 	for _, route := range routes {
 		fmt.Println(route.LoadList())
@@ -48,6 +48,39 @@ func nextClosestAlgorithm(loads map[int]model.Load) []model.Route {
 			routes[currentDriverNumber].AppendLoad(loads[closestLoadNumber])
 			currentLocation = loads[closestLoadNumber].Dropoff
 			delete(loads, closestLoadNumber)
+		}
+	}
+	return routes
+}
+
+func enhancedNextClosestAlgorithm(loads map[int]model.Load) []model.Route {
+	routes := []model.Route{model.NewRoute()}
+	currentDriverNumber := 0
+
+	currentLocation := model.Point{X: 0.0, Y: 0.0}
+
+	for len(loads) > 0 {
+		closestLoadNumbers, err := currentLocation.FindClosestLoads(loads)
+		if err != nil {
+			panic(err)
+		}
+		closestViableLoadNumber := 0
+		for _, loadNum := range closestLoadNumbers {
+			if routes[currentDriverNumber].DistanceWithLoad(loads[loadNum]) > maxDriverDistance {
+				continue
+			} else {
+				closestViableLoadNumber = loadNum
+				break
+			}
+		}
+		if closestViableLoadNumber == 0 {
+			routes = append(routes, model.NewRoute())
+			currentDriverNumber++
+			currentLocation = model.Point{X: 0.0, Y: 0.0}
+		} else {
+			routes[currentDriverNumber].AppendLoad(loads[closestViableLoadNumber])
+			currentLocation = loads[closestViableLoadNumber].Dropoff
+			delete(loads, closestViableLoadNumber)
 		}
 	}
 	return routes

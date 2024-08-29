@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -57,4 +58,34 @@ func (p *Point) FindClosestLoad(loads map[int]Load) (int, error) {
 	}
 
 	return closestLoadNumber, nil
+}
+
+// FindClosetLoad will return an ordered slice of the closest loads.
+func (p *Point) FindClosestLoads(loads map[int]Load) ([]int, error) {
+	if len(loads) == 0 {
+		return []int{}, fmt.Errorf("input has no loads")
+	}
+
+	type loadDistance struct {
+		loadNumber int
+		distance   float64
+	}
+
+	distances := make([]loadDistance, len(loads))
+	index := 0
+	for _, load := range loads {
+		distances[index] = loadDistance{loadNumber: load.Number, distance: p.Distance(load.Pickup)}
+		index++
+	}
+
+	sort.Slice(distances, func(i, j int) bool {
+		return distances[i].distance < distances[j].distance
+	})
+
+	orderedLoads := make([]int, len(loads))
+	for index, ld := range distances {
+		orderedLoads[index] = ld.loadNumber
+	}
+
+	return orderedLoads, nil
 }
