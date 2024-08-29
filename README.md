@@ -2,12 +2,14 @@
 
 ## Notes from the author
 This code sample was written to solve a Vehicle Routing Problem(VRP).
+
 This code was written and tested on macOS 12.7.6.
+go version = go1.23.0 darwin/amd64
+
 No AI tools were used.
-Google's OR-Tools were not used.
+No Google OR-Tools were used.
 No external sources were referenced or used.
 All functions have as much unit test coverage as reasonably possible.
-go version = go1.23.0 darwin/amd64
 
 ## To Run
 From the top level directory run:
