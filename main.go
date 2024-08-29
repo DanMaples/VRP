@@ -17,14 +17,14 @@ func main() {
 
 	loads := parser.Parse(filePath)
 
-	routes := enhancedNextClosestAlgorithm(loads)
+	routes := DanMaplesVRP(loads)
 
 	for _, route := range routes {
 		fmt.Println(route.LoadList())
 	}
 }
 
-// enhancedNextClosestAlgorithm sends out 1 driver to the closet pickup location and assigns that load to them.
+// DanMaplesVRP sends out 1 driver to the closet pickup location and assigns that load to them.
 // The algorithm then finds the closest pickup location from the load's dropoff point and checks to
 // see if the driver is capable of handling that load.
 // If so, it is assigned to that driver.
@@ -32,7 +32,7 @@ func main() {
 // This repeats until a driver can't take the any more loads.
 // At that point, the driver is sent back
 // to the depot and a new driver is dispatched.
-func enhancedNextClosestAlgorithm(loads map[int]model.Load) []model.Route {
+func DanMaplesVRP(loads map[int]model.Load) []model.Route {
 	routes := []model.Route{model.NewRoute()}
 
 	currentLocation := model.Point{X: 0.0, Y: 0.0}
