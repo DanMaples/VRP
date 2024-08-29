@@ -8,12 +8,27 @@ import (
 )
 
 func TestNewPoint(t *testing.T) {
-	inputString := "(-9.100071078494038,-48.89301103772511)"
-	expected := model.Point{X: -9.100071078494038, Y: -48.89301103772511}
+	tests := map[string]struct {
+		input         string
+		expectedPoint model.Point
+	}{
+		"basic": {
+			input:         "(-9.100071078494038,-48.89301103772511)",
+			expectedPoint: model.Point{X: -9.100071078494038, Y: -48.89301103772511},
+		},
+		"noParens": {
+			input:         "-19.100071078494038,-4.89301103772511",
+			expectedPoint: model.Point{X: -19.100071078494038, Y: -4.89301103772511},
+		},
+	}
 
-	actual := model.NewPoint(inputString)
-	if actual.X != expected.X || actual.Y != expected.Y {
-		t.Errorf("Expected (%.20f,%.20f), Actual (%.20f,%.20f)", expected.X, expected.Y, actual.X, actual.Y)
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			actualPoint := model.NewPoint(tc.input)
+			if actualPoint.X != tc.expectedPoint.X || actualPoint.Y != tc.expectedPoint.Y {
+				t.Fatalf("Expected (%.20f,%.20f), Actual (%.20f,%.20f)", tc.expectedPoint.X, tc.expectedPoint.Y, actualPoint.X, actualPoint.Y)
+			}
+		})
 	}
 }
 

@@ -10,54 +10,62 @@ import (
 func TestRouteDistanceWithLoad(t *testing.T) {
 	pickup := model.Point{X: -3.0, Y: 4.0}
 	dropoff := model.Point{X: -6.0, Y: 0.0}
-	a := model.NewLoad(1, pickup, dropoff)
+	loadA := model.NewLoad(1, pickup, dropoff)
 
 	pickup = model.Point{X: -6.0, Y: 4.0}
 	dropoff = model.Point{X: -9.0, Y: 0.0}
-	b := model.NewLoad(2, pickup, dropoff)
+	loadB := model.NewLoad(2, pickup, dropoff)
 
-	route := model.NewRoute()
-
-	actualDistance := route.DistanceWithLoad(a)
-	expectedDistance := 16.0
-
-	if expectedDistance != actualDistance {
-		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)
+	tests := map[string]struct {
+		routeLoads       []model.Load
+		newLoad          model.Load
+		expectedDistance float64
+	}{
+		"noLoads": {
+			routeLoads:       []model.Load{},
+			newLoad:          loadA,
+			expectedDistance: 16.0,
+		},
+		"hasLoads": {
+			routeLoads:       []model.Load{loadA},
+			newLoad:          loadB,
+			expectedDistance: 28.0,
+		},
 	}
 
-	route.AppendLoad(a)
-	actualDistance = route.DistanceWithLoad(b)
-	expectedDistance = 28.0
-
-	if expectedDistance != actualDistance {
-		t.Errorf("Expected %.20f, Actual %.20f", expectedDistance, actualDistance)
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			route := model.NewRoute()
+			for _, load := range tc.routeLoads {
+				route.AppendLoad(load)
+			}
+			actualDistance := route.DistanceWithLoad(tc.newLoad)
+			if tc.expectedDistance != actualDistance {
+				t.Errorf("Expected %.20f, Actual %.20f", tc.expectedDistance, actualDistance)
+			}
+		})
 	}
 }
 
 func TestLoadList(t *testing.T) {
+	loadOne := model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0})
+	loadTwo := model.NewLoad(2, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0})
+	loadThree := model.NewLoad(3, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0})
+
 	tests := map[string]struct {
 		loads        []model.Load
 		expectedList string
 	}{
 		"oneLoad": {
-			loads: []model.Load{
-				model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
-			},
+			loads:        []model.Load{loadOne},
 			expectedList: "[1]",
 		},
 		"twoLoads": {
-			loads: []model.Load{
-				model.NewLoad(2, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
-				model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
-			},
+			loads:        []model.Load{loadTwo, loadOne},
 			expectedList: "[2,1]",
 		},
 		"threeLoads": {
-			loads: []model.Load{
-				model.NewLoad(2, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
-				model.NewLoad(3, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
-				model.NewLoad(1, model.Point{X: -3.0, Y: 4.0}, model.Point{X: -6.0, Y: 0.0}),
-			},
+			loads:        []model.Load{loadTwo, loadThree, loadOne},
 			expectedList: "[2,3,1]",
 		},
 	}
